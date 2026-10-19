@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "organisation": "Banque Meridia (fictional retail & corporate bank, EU / DORA + NIS2 scope)",
+    "snapshot_date": "2026-10-19",
+    "epss_note": "EPSS values refreshed live on 2026-10-19. Run triage.py --live to refresh them from api.first.org and the CISA KEV feed."
+  },
+  "assets": {
+    "ASSET01": {
+      "name": "Meridia CoreBank v4.2 (ledger & billing engine) - RHEL 8 DB tier + Windows Server 2022 app tier",
+      "role": "Regulatory transaction core / internal billing",
+      "exposure": "isolated",
+      "criticality": "critical"
+    },
+    "ASSET02": {
+      "name": "Ivanti Connect Secure 22.x (remote-access VPN)",
+      "role": "Remote perimeter gateway for staff and IT providers",
+      "exposure": "internet",
+      "criticality": "high"
+    },
+    "ASSET03": {
+      "name": "Confluence Data Center 8.x (internal wiki)",
+      "role": "Internal collaboration & runbooks",
+      "exposure": "internal",
+      "criticality": "moderate"
+    },
+    "ASSET04": {
+      "name": "Citrix NetScaler ADC 13.1 (partner payment gateway / B2B reverse proxy)",
+      "role": "B2B transaction API front-end",
+      "exposure": "partner",
+      "criticality": "high"
+    },
+    "ASSET05": {
+      "name": "Jenkins 2.4xx LTS (CI/CD build server)",
+      "role": "Builds and deploys internal apps",
+      "exposure": "internal",
+      "criticality": "moderate"
+    }
+  },
+  "cves": [
+    {
+      "cve": "CVE-2023-46805",
+      "asset": "ASSET02",
+      "title": "Ivanti ICS authentication bypass (web component)",
+      "cvss": 8.2,
+      "epss": 1.0,
+      "kev": true,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "note": "Entry point of the UNC5221 chain"
+    },
+    {
+      "cve": "CVE-2024-21887",
+      "asset": "ASSET02",
+      "title": "Ivanti ICS command injection (chained with CVE-2023-46805)",
+      "cvss": 9.1,
+      "epss": 1.0,
+      "kev": true,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "note": "Unauthenticated RCE when chained"
+    },
+    {
+      "cve": "CVE-2024-21893",
+      "asset": "ASSET02",
+      "title": "Ivanti ICS SAML component SSRF",
+      "cvss": 8.2,
+      "epss": 1.0,
+      "kev": true,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "note": "Used to bypass the first XML mitigation"
+    },
+    {
+      "cve": "CVE-2023-4966",
+      "asset": "ASSET04",
+      "title": "Citrix Bleed - NetScaler session token leak",
+      "cvss": 7.5,
+      "epss": 1.0,
+      "kev": true,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "note": "NVD 7.5 vs vendor 9.4 - contradictory scoring; partner IP whitelist in front"
+    },
+    {
+      "cve": "CVE-2023-6548",
+      "asset": "ASSET04",
+      "title": "NetScaler management interface authenticated RCE",
+      "cvss": 5.5,
+      "epss": 0.032,
+      "kev": true,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "exposure_override": "internal",
+      "note": "Needs NSIP/management access - management plane on isolated admin VLAN"
+    },
+    {
+      "cve": "CVE-2023-38545",
+      "asset": "ASSET01",
+      "title": "libcurl SOCKS5 heap overflow (embedded curl 8.3.0 in CoreBank)",
+      "cvss": 9.8,
+      "epss": 0.787,
+      "kev": false,
+      "patch_available": false,
+      "mitigation_factor": 1.0,
+      "note": "Press-hyped 'worst curl flaw'; needs SOCKS5 proxy with remote hostname resolution; CoreBank vendor fix not yet shipped"
+    },
+    {
+      "cve": "CVE-2024-38063",
+      "asset": "ASSET01",
+      "title": "Windows TCP/IP IPv6 RCE",
+      "cvss": 9.8,
+      "epss": 0.706,
+      "kev": false,
+      "patch_available": true,
+      "mitigation_factor": 0.5,
+      "note": "IPv6 disabled by GPO on app tier - precondition absent"
+    },
+    {
+      "cve": "CVE-2023-22515",
+      "asset": "ASSET03",
+      "title": "Confluence Data Center broken access control (admin account creation)",
+      "cvss": 9.8,
+      "epss": 0.992,
+      "kev": true,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "note": "Vendor scored 10.0; internal only"
+    },
+    {
+      "cve": "CVE-2024-23897",
+      "asset": "ASSET05",
+      "title": "Jenkins CLI arbitrary file read (args4j)",
+      "cvss": 9.8,
+      "epss": 1.0,
+      "kev": true,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "note": "Can leak secrets/credentials used by pipelines"
+    },
+    {
+      "cve": "CVE-2024-6387",
+      "asset": "ASSET05",
+      "title": "OpenSSH regreSSHion signal handler race",
+      "cvss": 8.1,
+      "epss": 0.995,
+      "kev": false,
+      "patch_available": true,
+      "mitigation_factor": 0.6,
+      "note": "Hours of attempts, practical PoC on 32-bit only; SSH reachable from bastion only"
+    },
+    {
+      "cve": "CVE-2023-48795",
+      "asset": "ASSET03",
+      "title": "Terrapin SSH prefix truncation",
+      "cvss": 5.9,
+      "epss": 0.935,
+      "kev": false,
+      "patch_available": true,
+      "mitigation_factor": 0.5,
+      "note": "Requires active MitM position on internal LAN; integrity downgrade only"
+    },
+    {
+      "cve": "CVE-2024-38428",
+      "asset": "ASSET01",
+      "title": "GNU wget URL userinfo semicolon mishandling (used by CoreBank batch scripts)",
+      "cvss": 9.1,
+      "epss": 0.00672,
+      "kev": false,
+      "patch_available": true,
+      "mitigation_factor": 1.0,
+      "note": "Critical CVSS but EPSS < 1%, no known exploitation; URLs are hardcoded internal endpoints"
+    }
+  ]
+}
